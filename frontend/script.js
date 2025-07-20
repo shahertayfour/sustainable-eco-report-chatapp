@@ -43,7 +43,11 @@ class ChatApp {
             const data = await response.json();
             
             if (data.status === 'success') {
-                this.addMessage(data.message, 'bot');
+                if (data.type === 'report') {
+                    this.addReportMessage(data.message, data.report_data);
+                } else {
+                    this.addMessage(data.message, 'bot');
+                }
             } else {
                 this.addMessage('Sorry, I encountered an error processing your request.', 'bot');
             }
@@ -81,6 +85,67 @@ class ChatApp {
                 <small class="message-time">${currentTime}</small>
             `;
         }
+        
+        this.chatMessages.appendChild(messageDiv);
+        this.scrollToBottom();
+    }
+    
+    addReportMessage(message, reportData) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message report-message';
+        
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const summary = reportData.summary || {};
+        
+        messageDiv.innerHTML = `
+            <div class="message-content report-content">
+                <div class="report-header">
+                    <i class="fas fa-chart-line me-2"></i>
+                    <strong>Sustainability Report Generated</strong>
+                </div>
+                
+                <div class="report-summary">
+                    ${summary.sustainability_score !== 'N/A' ? 
+                        `<div class="score-badge">
+                            <span class="score-label">Sustainability Score:</span>
+                            <span class="score-value">${summary.sustainability_score}/100</span>
+                        </div>` : ''
+                    }
+                    ${summary.data_points_analyzed !== 'N/A' ? 
+                        `<div class="data-points">
+                            <i class="fas fa-database me-1"></i>
+                            ${summary.data_points_analyzed} data points analyzed
+                        </div>` : ''
+                    }
+                </div>
+                
+                <div class="report-analysis">
+                    ${this.escapeHtml(message)}
+                </div>
+                
+                ${summary.key_recommendations && summary.key_recommendations.length > 0 ? `
+                    <div class="recommendations">
+                        <strong><i class="fas fa-lightbulb me-1"></i>Key Recommendations:</strong>
+                        <ul>
+                            ${summary.key_recommendations.map(rec => `<li>${this.escapeHtml(rec)}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                <div class="report-actions">
+                    <button class="btn btn-sm btn-outline-success" onclick="this.downloadReport('${reportData.generated_at}')">
+                        <i class="fas fa-download me-1"></i>Download Report
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="this.viewDetailedData('${reportData.generated_at}')">
+                        <i class="fas fa-eye me-1"></i>View Details
+                    </button>
+                </div>
+            </div>
+            <small class="message-time">${currentTime}</small>
+        `;
+        
+        // Store report data for later access
+        messageDiv.reportData = reportData;
         
         this.chatMessages.appendChild(messageDiv);
         this.scrollToBottom();

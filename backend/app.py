@@ -11,6 +11,7 @@ CORS(app)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "llama3.1"
+REPORT_SERVICE_URL = "http://localhost:5001"
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -25,6 +26,40 @@ def chat():
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
         
+        # Check if this is a report request
+        report_keywords = ['report', 'analyze', 'sustainability', 'building data', 'environmental', 'co2', 'temperature', 'humidity', 'occupancy']
+        is_report_request = any(keyword in user_message.lower() for keyword in report_keywords)
+        
+        if is_report_request:
+            try:
+                # Forward to report service
+                report_payload = {
+                    "query": user_message,
+                    "type": "comprehensive"
+                }
+                
+                report_response = requests.post(f"{REPORT_SERVICE_URL}/report", 
+                                              json=report_payload, timeout=60)
+                
+                if report_response.status_code == 200:
+                    report_data = report_response.json()
+                    return jsonify({
+                        "message": report_data.get('llm_analysis', 'Report generated successfully'),
+                        "model": MODEL_NAME,
+                        "status": "success",
+                        "type": "report",
+                        "report_data": report_data
+                    })
+                else:
+                    # Fallback to regular chat if report service fails
+                    pass
+                    
+            except Exception as e:
+                print(f"Report service error: {e}")
+                # Fallback to regular chat
+                pass
+        
+        # Regular chat functionality
         ollama_payload = {
             "model": MODEL_NAME,
             "prompt": user_message,
@@ -39,7 +74,8 @@ def chat():
             return jsonify({
                 "message": ai_message,
                 "model": MODEL_NAME,
-                "status": "success"
+                "status": "success",
+                "type": "chat"
             })
         else:
             return jsonify({
