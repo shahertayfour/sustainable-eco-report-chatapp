@@ -6,6 +6,18 @@ A Flask-based web application with MCP (Model Context Protocol) integration for 
 
 This application provides AI-powered analysis of Building 413's environmental data including CO2 levels, temperature, humidity, light levels, and motion detection. It uses a clean Flask frontend with the `mcp-use` library to communicate with an MCP server that processes real building sensor data.
 
+## 📷 Screenshots
+
+### Frontend - Web Chat Interface
+![Frontend Chatbot Interface](screenshots/1.jpeg)
+
+*The Flask web application showing the Building 413 chat interface with AI-powered responses. Users can ask natural language questions about environmental data and receive detailed analytics.*
+
+### Backend - MCP Server Logs
+![Backend MCP Server](screenshots/2.jpeg)
+
+*The MCP server running in the terminal, showing real-time processing of user queries, tool execution, and data analysis. The server handles requests from the frontend and processes building sensor data.*
+
 ## 🏗️ Architecture
 
 ```
@@ -20,6 +32,9 @@ sustainable-eco-report-chatapp/
 │   └── requirements.txt       # Backend dependencies
 ├── dataset/
 │   └── building_413_data.csv  # Building 413 sensor data (10k+ records)
+├── screenshots/               # Application screenshots
+│   ├── 1.jpeg                # Main interface
+│   └── 2.jpeg                # AI analysis example
 ├── .env                       # Environment configuration
 ├── .env.example              # Environment template
 └── README.md                 # This file
@@ -181,6 +196,19 @@ The application analyzes real environmental data from Building 413:
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
+
+## 📊 Dataset Information
+
+The environmental sensor data used in this application is sourced from **[Kaggle Smart Building System Dataset](https://www.kaggle.com/datasets/ranakrc/smart-building-system/data)** and contains comprehensive building monitoring data. While this application focuses on **Building 413**, the complete dataset includes sensor data from **multiple buildings** (413, 415, 417, 419, 421, 422, 423, 424, 442, 446, 448, 452, 454, 456, 458, 462, 510, 511, 513, 552, 554, 556, 558, 562, 564, 621, 621A, 621C, 621D, 621E, 640, 644, 648, 656A, 656B, 664, 666, 668, 717, 719, 721, 722, 723, 724, 726, 734, 746, 748, 752, 754, 776) available in the original dataset.
+
+Each building contains the same sensor types:
+- **CO2 levels** (ppm)
+- **Temperature** (°C) 
+- **Humidity** (%)
+- **Light levels** (lux)
+- **PIR motion detection**
+
+This rich dataset opens possibilities for expanding the application to support multi-building analysis, comparative studies, and campus-wide environmental monitoring.
 
 ## 📄 License
 
