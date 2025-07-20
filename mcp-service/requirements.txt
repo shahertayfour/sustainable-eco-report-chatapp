@@ -1,4 +1,0 @@
-fastmcp
-pandas
-numpy
-1python-dotenv

@@ -1,184 +1,193 @@
-# Sustainable Eco Chat App with MCP Integration
+# Building 413 Smart Environmental Monitor
 
-A microservices-based chat application using Flask backend with Ollama integration, Bootstrap frontend, and MCP (Model Context Protocol) for smart building data analysis and sustainability reporting.
+A Flask-based web application with MCP (Model Context Protocol) integration for analyzing Building 413 environmental sensor data using Ollama's llama3.1 model.
 
-## Architecture
+## 🏢 Overview
+
+This application provides AI-powered analysis of Building 413's environmental data including CO2 levels, temperature, humidity, light levels, and motion detection. It uses a clean Flask frontend with the `mcp-use` library to communicate with an MCP server that processes real building sensor data.
+
+## 🏗️ Architecture
 
 ```
 sustainable-eco-report-chatapp/
-├── backend/          # Main Flask API service (port 5122)
-├── frontend/         # Bootstrap web interface (port 3000)
-├── mcp-service/      # FastMCP server for data analysis
-├── report-service/   # Report generation service (port 5001)
-├── dataset/          # building_413_data.csv - Smart home sensor data
-├── shared/           # Shared utilities
-└── .env             # Environment configuration
+├── frontend/
+│   ├── flask_app.py           # Flask web app with mcp-use client
+│   ├── requirements.txt       # Frontend dependencies
+│   └── templates/
+│       └── chat.html          # Beautiful UI template
+├── backend/
+│   ├── mcp_server.py          # MCP server with building analysis tools
+│   └── requirements.txt       # Backend dependencies
+├── dataset/
+│   └── building_413_data.csv  # Building 413 sensor data (10k+ records)
+├── .env                       # Environment configuration
+├── .env.example              # Environment template
+└── README.md                 # This file
 ```
 
-## Prerequisites
+## ✨ Features
 
-1. **Ollama**: Install Ollama and download the Llama 3.1 model
-   ```bash
-   # Install Ollama (visit https://ollama.ai for instructions)
-   ollama pull llama3.1
-   ```
+- 🤖 **AI-Powered Chat Interface** - Natural language queries about building data
+- 📊 **Real-Time Analysis** - Live building energy statistics and environmental metrics
+- 🌿 **Sustainability Insights** - CO2 analysis, energy recommendations, and eco-impact calculations
+- 🏢 **Building 413 Focus** - Specialized for single building monitoring
+- 🔧 **MCP Integration** - Uses Model Context Protocol for structured data access
+- 💬 **Smart Responses** - Ollama llama3.1 model for intelligent building analysis
 
-2. **Python 3.8+**: For all backend services
-3. **Modern web browser**: For the frontend
+## 🚀 Prerequisites
 
-## Setup Instructions
+### Required Software
+1. **Python 3.12+** - For running Flask and MCP services
+2. **Ollama** - Local AI model server
+3. **Modern web browser** - For accessing the web interface
 
-### 1. Clone and Setup Environment
-
+### Install Ollama and Model
 ```bash
-git clone <repository-url>
+# Install Ollama (visit https://ollama.ai for platform-specific instructions)
+# Then download the required model:
+ollama pull llama3.1
+```
+
+## 📦 Installation
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/CodersLaunchpad/sustainable-eco-report-chatapp.git
 cd sustainable-eco-report-chatapp
+```
+
+### 2. Environment Setup
+```bash
 cp .env.example .env
+# Edit .env if needed (default settings should work)
 ```
 
-### 2. Install Dependencies for All Services
+### 3. Install Dependencies
 
+**Backend (MCP Server):**
 ```bash
-# Backend dependencies
-cd backend && pip install -r requirements.txt && cd ..
-
-# MCP Service dependencies
-cd mcp-service && pip install -r requirements.txt && cd ..
-
-# Report Service dependencies
-cd report-service && pip install -r requirements.txt && cd ..
+cd backend
+pip install -r requirements.txt
+cd ..
 ```
 
-### 3. Start All Services (4 Terminals Required)
-
-**Terminal 1 - Start Ollama:**
+**Frontend (Flask App):**
 ```bash
+cd frontend
+pip install -r requirements.txt
+cd ..
+```
+
+## 🎯 Usage
+
+### 1. Start Ollama
+```bash
+# Make sure Ollama is running (usually starts automatically)
 ollama serve
 ```
 
-**Terminal 2 - Start MCP Server:**
-```bash
-cd mcp-service
-python src/server.py
-```
-
-**Terminal 3 - Start Report Service:**
-```bash
-cd report-service
-python app.py
-```
-
-**Terminal 4 - Start Main Backend:**
+### 2. Start MCP Server
 ```bash
 cd backend
-python app.py
+python mcp_server.py
 ```
+*Server will start on http://localhost:4141/mcp*
 
-**Terminal 5 - Start Frontend:**
+### 3. Start Flask Frontend
 ```bash
 cd frontend
-python -m http.server 3000
+python flask_app.py
 ```
+*Web interface will be available at http://localhost:5000*
 
 ### 4. Access the Application
+Open your browser and navigate to **http://localhost:5000**
 
-- **Frontend**: http://localhost:3000
-- **Main Backend API**: http://localhost:5122
-- **Report Service**: http://localhost:5001
-- **Health Checks**: 
-  - Backend: http://localhost:5122/health
-  - Report Service: http://localhost:5001/health
+## 💬 Example Queries
 
-## How to Use
+Try these natural language queries in the chat interface:
 
-### Regular Chat
-- Ask any general questions about sustainability
-- The AI will respond using Ollama Llama 3.1
+### Basic Information
+- `"Hello!"` - Simple greeting
+- `"Help"` or `"What can you do?"` - Get system information
 
-### Smart Building Data Reports
-The system automatically detects report requests using keywords and generates data-driven sustainability reports from the building sensor dataset.
+### Building Data Analysis
+- `"Get building energy stats"` - Complete environmental overview
+- `"Show me CO2 levels"` - Air quality analysis
+- `"What's the temperature and humidity?"` - Climate conditions
+- `"Analyze light levels"` - Illumination data
+- `"Check motion detection"` - Occupancy patterns
 
-**Trigger Keywords**: `report`, `analyze`, `sustainability`, `building data`, `environmental`, `co2`, `temperature`, `humidity`, `occupancy`
+### Sustainability Insights
+- `"Get sustainability metrics"` - Energy recommendations
+- `"Calculate carbon footprint"` - Environmental impact
+- `"Show water usage analysis"` - Resource consumption
 
-**Example Queries**:
-- "Generate a sustainability report for the building"
-- "Analyze the CO2 levels in the building data"
-- "Show me environmental comfort analysis"
-- "What are the occupancy patterns?"
-- "Create a comprehensive sustainability assessment"
+## 🔧 Technical Details
 
 ### MCP Tools Available
-The MCP server provides these data analysis tools:
-- **get_data_summary**: Overview of available sensor data
-- **analyze_co2_levels**: Air quality and ventilation analysis
-- **analyze_occupancy_patterns**: Motion sensor insights for energy optimization
-- **get_environmental_comfort_analysis**: Temperature and humidity analysis
-- **generate_sustainability_report**: Comprehensive sustainability reports
+The system provides three main MCP tools for building analysis:
 
-## Environment Variables
+1. **`get_building_energy_stats()`** - Comprehensive building data with mean/max/min values
+2. **`get_sustainability_metrics()`** - Energy recommendations and insights
+3. **`analyze_eco_impact()`** - Carbon footprint and environmental analysis
 
-Configure services using `.env` files:
+### Data Sources
+- **Building 413 Sensor Data**: 10,000+ environmental readings
+- **Sensor Types**: CO2, Temperature, Humidity, Light, PIR Motion
+- **Data Format**: CSV with timestamp-indexed measurements
 
-**Main `.env`:**
-```env
-FLASK_PORT=5122              # Main backend port
-FLASK_DEBUG=True             # Debug mode
-REPORT_SERVICE_PORT=5001     # Report service port
-OLLAMA_URL=http://localhost:11434
-MODEL_NAME=llama3.1
-```
+### AI Processing
+- **Model**: Ollama llama3.1 (local deployment)
+- **Client**: mcp-use library for MCP communication
+- **Processing**: Intelligent query routing to appropriate tools
 
-## API Endpoints
+## 🔍 Troubleshooting
 
-### Main Backend (`localhost:5122`)
-- `GET /health` - Health check
-- `POST /chat` - Send message to AI (auto-routes to report service for data queries)
-- `GET /models` - List available Ollama models
+### Common Issues
 
-### Report Service (`localhost:5001`)
-- `GET /health` - Health check
-- `POST /report` - Generate sustainability reports
-- `GET /data-summary` - Get building data summary
+**"MCP server not responding"**
+- Ensure MCP server is running on port 4141
+- Check that `python mcp_server.py` started successfully
 
-## Dataset
+**"Ollama connection failed"**
+- Verify Ollama is installed and running
+- Confirm llama3.1 model is downloaded: `ollama list`
 
-The application includes `building_413_data.csv` with real smart building sensor data:
-- **CO2 levels** (ppm)
-- **Temperature** (°C)
-- **Humidity** (%)
-- **Light levels** (lux)
-- **Motion detection** (PIR sensor)
-- **Timestamps** and building ID
+**"Building data not found"**
+- Check that `dataset/building_413_data.csv` exists
+- Verify file permissions and path
 
-## Features
+### Logs and Debugging
+- **MCP Server Logs**: Check terminal running `mcp_server.py`
+- **Flask App Logs**: Check terminal running `flask_app.py`
+- **Browser Console**: F12 for frontend debugging
 
-- ✅ Responsive Bootstrap UI with report display
-- ✅ Real-time chat interface
-- ✅ Ollama Llama 3.1 integration
-- ✅ **MCP (Model Context Protocol) integration**
-- ✅ **Smart building data analysis**
-- ✅ **Sustainability report generation**
-- ✅ **Data-driven insights and recommendations**
-- ✅ Microservices architecture
-- ✅ Environment configuration
-- ✅ CORS enabled
-- ✅ Error handling and fallbacks
-- ✅ Typing indicators
+## 🌱 Building 413 Data Overview
 
-## Development
+The application analyzes real environmental data from Building 413:
 
-### Adding New MCP Tools
-Add new analysis tools in `mcp-service/src/server.py` using the `@mcp.tool()` decorator.
+- **📊 Total Records**: 10,000+ sensor readings
+- **🌡️ Temperature**: 23.9°C - 25.3°C (avg: 24.8°C)
+- **💨 CO2 Levels**: 438-568 ppm (avg: 492 ppm)  
+- **💧 Humidity**: 42.4% - 45.3% (avg: 43.5%)
+- **💡 Light Levels**: 0-238 lux (avg: 80.6 lux)
+- **👥 Motion Detection**: PIR sensor data
 
-### Customizing Reports
-Modify the report generation logic in `report-service/app.py` to customize the LLM prompts and analysis.
+## 🤝 Contributing
 
-### Port Configuration
-Update port settings in the respective `.env` files for each service.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## Troubleshooting
+## 📄 License
 
-1. **Port conflicts**: Check if ports 5122, 5001, 3000 are available
-2. **MCP connection issues**: Ensure the MCP service is running before starting the report service
-3. **Ollama not responding**: Make sure Ollama is running and llama3.1 model is downloaded
-4. **Dataset not found**: Verify `building_413_data.csv` exists in the `dataset/` folder
+This project is licensed under the MIT License.
+
+## 🔗 Links
+
+- [Ollama](https://ollama.ai) - Local AI model server
+- [MCP Protocol](https://modelcontextprotocol.io) - Model Context Protocol
+- [Flask](https://flask.palletsprojects.com/) - Python web framework
