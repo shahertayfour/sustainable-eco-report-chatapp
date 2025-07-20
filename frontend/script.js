@@ -1,6 +1,6 @@
 class ChatApp {
     constructor() {
-        this.apiUrl = 'http://localhost:5122';
+        this.apiUrl = 'http://localhost:5000';
         this.messageInput = document.getElementById('messageInput');
         this.sendBtn = document.getElementById('sendBtn');
         this.chatMessages = document.getElementById('chatMessages');
