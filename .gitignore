@@ -205,4 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-# dataset/*.csv
+
+# Project-specific
+.claude/
+.env
+nul
+*.json
+!package.json
+!package-lock.json
+WORKING_STATUS.md
+test_app.py

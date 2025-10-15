@@ -23,31 +23,37 @@ This application provides AI-powered analysis of Building 413's environmental da
 ```
 sustainable-eco-report-chatapp/
 ├── frontend/
-│   ├── flask_app.py           # Flask web app with mcp-use client
-│   ├── requirements.txt       # Frontend dependencies
+│   ├── flask_app.py              # Flask web app with mcp-use + Ollama (AI-powered)
+│   ├── flask_app_simple.py       # Flask web app with direct MCP imports (⭐ Recommended)
+│   ├── requirements.txt          # Frontend dependencies
 │   └── templates/
-│       └── chat.html          # Beautiful UI template
+│       └── chat.html             # Professional Arabic/English UI
 ├── backend/
-│   ├── mcp_server.py          # MCP server with building analysis tools
-│   └── requirements.txt       # Backend dependencies
+│   ├── mcp_server.py             # MCP tools for building analysis
+│   ├── run_server.py             # HTTP server wrapper (uvicorn)
+│   └── requirements.txt          # Backend dependencies (minimal)
 ├── dataset/
-│   └── building_413_data.csv  # Building 413 sensor data (10k+ records)
-├── screenshots/               # Application screenshots
-│   ├── 1.jpeg                # Main interface
-│   └── 2.jpeg                # AI analysis example
-├── .env                       # Environment configuration
-├── .env.example              # Environment template
-└── README.md                 # This file
+│   └── building_413_data.csv     # Building 413 sensor data (8,640 records)
+├── screenshots/                  # Application screenshots
+│   ├── 1.jpeg                   # Main interface
+│   └── 2.jpeg                   # AI analysis example
+├── create_dataset.py             # Script to generate synthetic data
+├── START_APP.bat                 # One-click startup script (Windows)
+├── .env                          # Environment configuration (create from .env.example)
+├── .env.example                  # Environment template
+└── README.md                     # This file
 ```
 
 ## ✨ Features
 
-- 🤖 **AI-Powered Chat Interface** - Natural language queries about building data
+- 🤖 **Smart Chat Interface** - Natural language queries in Arabic & English
 - 📊 **Real-Time Analysis** - Live building energy statistics and environmental metrics
 - 🌿 **Sustainability Insights** - CO2 analysis, energy recommendations, and eco-impact calculations
-- 🏢 **Building 413 Focus** - Specialized for single building monitoring
+- 🏢 **Building 413 Focus** - Specialized for single building monitoring with 8,640 sensor readings
 - 🔧 **MCP Integration** - Uses Model Context Protocol for structured data access
-- 💬 **Smart Responses** - Ollama llama3.1 model for intelligent building analysis
+- 💬 **Professional Reports** - Beautiful HTML reports with gradients, tables, and Arabic RTL support
+- ⚡ **Two Modes** - Choose between fast direct access or AI-powered intelligent routing
+- 🎨 **Shaheen Branding** - Professional green & gold color scheme
 
 ## 🚀 Prerequisites
 
@@ -95,48 +101,81 @@ cd ..
 
 ## 🎯 Usage
 
-### 1. Start Ollama
-```bash
-# Make sure Ollama is running (usually starts automatically)
-ollama serve
-```
+### Quick Start (Windows)
+**Double-click `START_APP.bat`** - Automatically starts both backend and frontend!
 
-### 2. Start MCP Server
+### Manual Start
+
+#### 1. Start Backend (MCP Server)
 ```bash
 cd backend
-python mcp_server.py
+python run_server.py
 ```
-*Server will start on http://localhost:4141/mcp*
+*Server will start on http://localhost:4141/sse*
 
-### 3. Start Flask Frontend
+#### 2. Start Frontend
+
+**Option A: Simple Version (⭐ Recommended - Fastest)**
 ```bash
+cd frontend
+python flask_app_simple.py
+```
+
+**Option B: AI-Powered Version (Uses Ollama)**
+```bash
+# Make sure Ollama is running first
+ollama serve
+
+# Then start frontend
 cd frontend
 python flask_app.py
 ```
+
 *Web interface will be available at http://localhost:5000*
 
-### 4. Access the Application
+#### 3. Access the Application
 Open your browser and navigate to **http://localhost:5000**
+
+### Frontend Comparison
+
+| Version | File | Speed | AI Features | Best For |
+|---------|------|-------|-------------|----------|
+| **Simple** ⭐ | `flask_app_simple.py` | Fastest | Direct keyword matching | Production, demos |
+| **AI-Powered** | `flask_app.py` | Slower | Ollama LLM routing | Advanced queries |
 
 ## 💬 Example Queries
 
 Try these natural language queries in the chat interface:
 
-### Basic Information
-- `"Hello!"` - Simple greeting
-- `"Help"` or `"What can you do?"` - Get system information
+### Basic Information (English & Arabic)
+- `"Hello!"` / `"مرحبا"` - Simple greeting
+- `"Help"` / `"مساعدة"` - Get system information
 
 ### Building Data Analysis
+**English:**
 - `"Get building energy stats"` - Complete environmental overview
 - `"Show me CO2 levels"` - Air quality analysis
 - `"What's the temperature and humidity?"` - Climate conditions
-- `"Analyze light levels"` - Illumination data
-- `"Check motion detection"` - Occupancy patterns
+
+**Arabic:**
+- `"احصل على إحصائيات الطاقة"` - تقرير شامل للبيئة
+- `"أظهر مقاييس الاستدامة"` - مقاييس الاستدامة
+- `"احسب البصمة الكربونية"` - البصمة الكربونية
 
 ### Sustainability Insights
 - `"Get sustainability metrics"` - Energy recommendations
 - `"Calculate carbon footprint"` - Environmental impact
 - `"Show water usage analysis"` - Resource consumption
+
+### What You'll Get
+
+Professional Arabic/English reports featuring:
+- ⚡ Shaheen branding with green & gold gradients
+- 📋 Document metadata (report number, date, classification)
+- 📊 Executive summary with key metrics cards
+- 📈 Detailed statistics tables (average, maximum, minimum)
+- 💡 Actionable recommendations in Arabic
+- ✅ Professional footer with compliance info
 
 ## 🔧 Technical Details
 
@@ -180,14 +219,25 @@ The system provides three main MCP tools for building analysis:
 
 ## 🌱 Building 413 Data Overview
 
-The application analyzes real environmental data from Building 413:
+The application analyzes environmental sensor data from Building 413:
 
-- **📊 Total Records**: 10,000+ sensor readings
-- **🌡️ Temperature**: 23.9°C - 25.3°C (avg: 24.8°C)
-- **💨 CO2 Levels**: 438-568 ppm (avg: 492 ppm)  
-- **💧 Humidity**: 42.4% - 45.3% (avg: 43.5%)
-- **💡 Light Levels**: 0-238 lux (avg: 80.6 lux)
-- **👥 Motion Detection**: PIR sensor data
+- **📊 Total Records**: 8,640 sensor readings (30 days, 5-minute intervals)
+- **🌡️ Temperature**: 22-28°C range with optimal HVAC control
+- **💨 CO2 Levels**: 400-650 ppm (excellent air quality)
+- **💧 Humidity**: 35-55% (optimal comfort range)
+- **💡 Light Levels**: 0-250 lux (occupancy-based lighting)
+- **👥 Motion Detection**: PIR sensor showing occupancy patterns
+
+### Data Generation
+The dataset can be regenerated with custom parameters using:
+```bash
+python create_dataset.py
+```
+This creates realistic synthetic data with:
+- Working hours vs. night patterns
+- Weekday vs. weekend variations
+- Seasonal adjustments
+- Peak hour anomalies
 
 ## 🤝 Contributing
 

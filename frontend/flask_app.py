@@ -15,8 +15,8 @@ app = Flask(__name__)
 MCP_CONFIG = {
     "mcpServers": {
         "sustainable-eco-report-chatapp": {
-            "url": "http://localhost:4141/mcp",
-            "transport": "streamable-http"
+            "url": "http://localhost:4141/sse",
+            "transport": "sse"
         }
     }
 }
@@ -26,18 +26,21 @@ async def query_building_data(user_query):
     try:
         # Create MCPClient from config
         client = MCPClient.from_dict(MCP_CONFIG)
-        
+
         # Create Ollama LLM
         llm = ChatOllama(model="llama3.1", base_url="http://localhost:11434")
-        
+
         # Create agent with the client
-        agent = MCPAgent(llm=llm, client=client, max_steps=10)
-        
+        agent = MCPAgent(llm=llm, client=client)
+
+        # Initialize the agent (connects to MCP server and loads tools)
+        await agent.initialize()
+
         # Pass the original user query directly to the agent
         # The agent will use the available MCP tools as needed
-        result = await agent.run(user_query, max_steps=10)
+        result = await agent.run(user_query)
         return str(result)
-        
+
     except Exception as e:
         return f"Error connecting to Building 413 data: {str(e)}"
 
@@ -128,9 +131,9 @@ def health():
     })
 
 if __name__ == '__main__':
-    print("🏢 Starting Building 413 Chat Frontend...")
-    print("📊 MCP Server: http://localhost:4141/mcp")
-    print("🤖 Using Ollama llama3.1 model")
-    print("🌐 Frontend will be available at: http://localhost:5000")
-    
+    print("Starting Building 413 Chat Frontend...")
+    print("MCP Server: http://localhost:4141/mcp")
+    print("Using Ollama llama3.1 model")
+    print("Frontend will be available at: http://localhost:5000")
+
     app.run(debug=True, host='0.0.0.0', port=5000) 
